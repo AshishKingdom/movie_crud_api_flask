@@ -1,5 +1,6 @@
 from pydantic import BaseModel, validator, Field, EmailStr
 from datetime import date
+import regex as re
 
 class MovieData(BaseModel):
     """Movie data schema"""
@@ -18,4 +19,11 @@ class MovieData(BaseModel):
     def is_date_past(cls, v):
         if v > date.today():
             raise Exception("Release date must be in the past")
+        return v
+    
+    @validator("title", "description", "director", "genre", "cast")
+    def is_valid_content_string(cls, v):
+        reg_exp = re.compile(r"^[a-zA-Z0-9_\.!, ]*$")
+        if not reg_exp.match(v):
+            raise Exception("Invalid characters in {}".format(v))
         return v
