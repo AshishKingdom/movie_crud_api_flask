@@ -4,7 +4,7 @@ from routes.user import UserRegistrationView, UserLoginView
 from routes.movie import MovieView
 from routes.search import SearchView
 
-# logging.basicConfig(level=logging.INFO, filename='app.log', filemode='a')
+logging.basicConfig(level=logging.INFO, filename='app.log', filemode='a')
 
 app.add_url_rule("/user/register", view_func=UserRegistrationView.as_view("user_register"), methods=["POST"])
 app.add_url_rule("/user/login", view_func=UserLoginView.as_view("user_login"), methods=["POST"])
