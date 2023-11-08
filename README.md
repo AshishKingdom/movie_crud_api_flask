@@ -49,7 +49,7 @@ python app.py
 Route
 
 ```http
-POST /movies/create
+POST /movie
 ```
 
 Request Header
@@ -82,7 +82,7 @@ Response
 Route
 
 ```http
-PUT /movies/update/<movie_id:int>
+PUT /movie/<movie_id:int>
 ```
 Route Parameter
 | Key          | Value              |
@@ -119,7 +119,7 @@ Response
 Route
 
 ```http
-DELETE /movies/delete/<movie_id:int>
+DELETE /movie/<movie_id:int>
 ```
 Route Parameter
 | Key          | Value              |
@@ -143,7 +143,7 @@ Response
 Route
 
 ```http
-GET /movies/get/<movie_id:int>
+GET /movie/<movie_id:int>
 ```
 Route Parameter
 | Key          | Value              |
@@ -152,7 +152,7 @@ Route Parameter
 
 Example
 ```http
-GET /movies/get/2
+GET /movie/2
 ```
 
 Response
@@ -175,7 +175,7 @@ Response
 Route
 
 ```http
-GET /movies/all
+GET /movie
 ```
 
 Route Parameter
@@ -185,10 +185,13 @@ Route Parameter
 | sort_by      | sorting criteria (price or release_year)    |
 | filter_by    | filter criteria  (genere, director, year)   |
 | filter_value | the actual value of the filter              |
+| order_by     | the sorting order - asc or desc             |
+| movies_per_page | the number of result to be displayed per page|
+
 
 Example:
 ```http
-GET movies/get/all?sort_by=price&filter_by=genre&filter_value=action&page=1
+GET /movie?sort_by=ticket_price&filter_by=genre&filter_value=action&order_by=asc
 ```
 
 Response
@@ -224,7 +227,7 @@ Response
 Route
 
 ```http
-GET /movies/search
+GET /movie/search
 ```
 
 Route Parameter
@@ -232,36 +235,28 @@ Route Parameter
 ---------------|----------------------------------------------
 | search_param | the parameter on which search is done       |
 | search_value | the actual seach value                      |
+| page         | the page number of the search result        |
+| movies_per_page | the number of movies to be displayed per page |
+
 
 Example:
 ```http
-GET movies/search?search_param=cast&search_value=Alex
+GET /movie/search?search_param=genre&search_value=comedy&page=2&movies_per_page=2
 ```
 
 Response
 ```json
 [
     {
-        "avg_rating": 9.0,
-        "cast": "Alex, Lisa",
-        "description": "explore the universe",
-        "director": "Captain Cosmos",
-        "genre": "sci-fi",
-        "id": 6,
-        "release_date": "2022-05-10",
-        "ticket_price": 2500.0,
-        "title": "space adventure"
-    },
-    {
-        "avg_rating": 9.1,
-        "cast": "Alex, Sarah",
-        "description": "journey to the stars",
-        "director": "Stellar Explorer",
-        "genre": "sci-fi",
-        "id": 17,
-        "release_date": "2022-08-30",
-        "ticket_price": 2400.0,
-        "title": "space odyssey"
+        "avg_rating": 7.5,
+        "cast": "John, Lisa, Tim",
+        "description": "laughter for all ages",
+        "director": "Smiles Unlimited",
+        "genre": "comedy",
+        "id": 15,
+        "release_date": "2019-12-25",
+        "ticket_price": 2000.0,
+        "title": "family fun"
     }
 ]
 ```
@@ -280,7 +275,7 @@ Request Body
 {
     "name":"Test",
     "email":"test@gmail.com",
-    "password":"12345"
+    "password":"Test@123"
 }
 ```
 
