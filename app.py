@@ -17,6 +17,5 @@ app.add_url_rule("/movie/search", view_func=SearchView.as_view("search"), method
 def db_create():
     db.create_all()
 
-    print('finished creating database')
     app.logger.info("Database has been created successfully!")
 
