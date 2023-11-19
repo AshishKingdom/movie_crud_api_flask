@@ -1,6 +1,6 @@
 from flask import jsonify, request, current_app
 from flask.views import MethodView
-from models.movie import Movie, movies_schema
+from db.movie import Movie, movies_schema
 
 class SearchView(MethodView):
     """

@@ -1,9 +1,10 @@
 
-from init import db
-from dataclasses import dataclass
+from db import db
+from flask_login import UserMixin
+# from dataclasses import dataclass
 
-@dataclass
-class User(db.Model):
+# @dataclass
+class User(UserMixin, db.Model):
     """
     User model with the following attributes:
     - id: primary key

@@ -1,6 +1,6 @@
 from flask import jsonify, request, current_app
 from flask.views import MethodView
-from models.movie import Movie, movie_schema, movies_schema
+from db.movie import Movie, movie_schema, movies_schema
 from init import db
 from schemas.movie import MovieData
 from pydantic import ValidationError
