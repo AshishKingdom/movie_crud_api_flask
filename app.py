@@ -5,7 +5,7 @@ from db.models.user import User
 # from routes.user import UserRegistrationView, UserLoginView
 # from routes.movie import MovieView
 # from routes.search import SearchView
-from routes import api
+from routes.base import api
 
 api.init_app(app)
 

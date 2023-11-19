@@ -50,7 +50,6 @@ class UserRegistration(Resource):
 
 
 @api.route("/login")
-@api.doc(params={"email": "User email", "password": "User password"})
 class UserLogin(Resource):
     """
     Login a user
@@ -85,15 +84,12 @@ class UserLogin(Resource):
 
 
 @api.route("/logout")
-@api.doc(security="Bearer Auth")
 class UserLogout(Resource):
     """
     Logout a user
     """
 
     @login_required
-    @login_manager.user_loader
-    @api.doc(responses={200: "User logged out successfully"})
     def post(self):
         current_app.logger.info("POST user/logout request received")
         logout_user()

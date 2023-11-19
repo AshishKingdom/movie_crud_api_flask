@@ -1,9 +1,7 @@
-
 from db import db
 from flask_login import UserMixin
-# from dataclasses import dataclass
 
-# @dataclass
+
 class User(UserMixin, db.Model):
     """
     User model with the following attributes:
@@ -12,6 +10,7 @@ class User(UserMixin, db.Model):
     - email: user email
     - password: user password
     """
+
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)

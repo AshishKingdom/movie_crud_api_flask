@@ -1,7 +1,6 @@
-from init import db, ma
-from dataclasses import dataclass
+from db import db
 
-@dataclass
+
 class Movie(db.Model):
     """
     Movie model with the following attributes:
@@ -15,6 +14,7 @@ class Movie(db.Model):
     - ticket_price: movie ticket price
     - cast: movie cast
     """
+
     __tablename__ = "movies"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -27,12 +27,7 @@ class Movie(db.Model):
     avg_rating = db.Column(db.Float)
     ticket_price = db.Column(db.Float)
     cast = db.Column(db.String)
-    created_by_id = db.Column(db.String)
+    # user_id is a foreign key
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
-
-class MovieSchema(ma.Schema):
-    class Meta:
-        fields = ('id', 'title', 'description', 'release_date', 'director', 'genre', 'avg_rating', 'ticket_price', 'cast', 'created_by')
-
-movie_schema = MovieSchema()
-movies_schema = MovieSchema(many=True)
+    created_by = db.relationship("User", backref="movies")
