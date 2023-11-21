@@ -1,13 +1,13 @@
 from db import db
+from core.config import AppConfig
 from flask import current_app, request
 from pydantic import ValidationError
 from schemas.user import UserRegistrationData, UserLoginData
 from db.models.user import User
-from core.security import get_hashed_password, verify_password
+from core.security import get_hashed_password, verify_password, admin_login_required
 
 from flask_restx import Namespace, Resource
-from flask_login import login_required, login_user, logout_user
-from app import login_manager
+from flask_jwt_extended import jwt_required, get_current_user, create_access_token
 
 api = Namespace("user", description="User related operations (login, logout, register)")
 
@@ -15,11 +15,20 @@ api = Namespace("user", description="User related operations (login, logout, reg
 @api.route("/register")
 class UserRegistration(Resource):
     """
-    Register a new user
+    Register a admin user
     """
 
     def post(self):
         current_app.logger.info("POST user/register request received")
+
+        # verifying the API secret key
+        if (
+            request.headers.get("x-api-secret-key")
+            != current_app.config["API_SECRET_KEY"]
+        ):
+            current_app.logger.error("Incorrect API secret key")
+            return {"message": "Incorrect API secret key"}, 401
+
         # extract user data
         try:
             user_data = UserRegistrationData(**request.get_json())
@@ -30,7 +39,6 @@ class UserRegistration(Resource):
             current_app.logger.error("Exception: {}".format(str(e)))
             return {"message": str(e)}, 400
 
-        name = user_data.name
         email = user_data.email
         password = user_data.password
 
@@ -39,14 +47,17 @@ class UserRegistration(Resource):
         if user:
             current_app.logger.error("User already exists")
             return {"message": "User already exists"}, 400
+
         # hash the password
         hashed_password = get_hashed_password(password)
         # create new user
-        new_user = User(name=name, email=email, password=hashed_password)
+        new_user = User(email=email, password=hashed_password, role="admin")
+
         db.session.add(new_user)
         db.session.commit()
-        current_app.logger.info("User created successfully ")
-        return {"message": "User created successfully"}, 201
+
+        current_app.logger.info("Admin User created successfully ")
+        return {"message": "Admin User created successfully"}, 201
 
 
 @api.route("/login")
@@ -76,22 +87,22 @@ class UserLogin(Resource):
             current_app.logger.error("Incorrect password has been provided")
             return {"message": "Incorrect password"}, 400
 
-        # login using flask_login
-        login_user(user)
+        access_token = create_access_token(
+            identity={"email": user.email, "role": user.role},
+            expires_delta=AppConfig.TOKEN_EXPIRE_TIME,
+        )
 
-        current_app.logger.info("User logged in successfully")
-        return {"message": "User logged in successfully"}, 200
+        current_app.logger.info("Access token granted to the user.")
+        return {"access_token": access_token}, 200
 
 
-@api.route("/logout")
-class UserLogout(Resource):
+@api.route("/test_admin_user")
+class TestAdminUser(Resource):
     """
-    Logout a user
+    Test admin login required decorator
     """
 
-    @login_required
-    def post(self):
-        current_app.logger.info("POST user/logout request received")
-        logout_user()
-        current_app.logger.info("User logged out successfully")
-        return {"message": "User logged out successfully"}, 200
+    @admin_login_required
+    def get(self):
+        current_app.logger.info("GET user/test_admin_user request received")
+        return {"message": "Admin login required test passed"}, 200

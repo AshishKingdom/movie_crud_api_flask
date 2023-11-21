@@ -28,6 +28,6 @@ class Movie(db.Model):
     ticket_price = db.Column(db.Float)
     cast = db.Column(db.String)
     # user_id is a foreign key
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    # user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
-    created_by = db.relationship("User", backref="movies")
+    # created_by = db.relationship("User", backref="movies")
