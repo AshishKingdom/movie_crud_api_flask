@@ -1,4 +1,4 @@
-# Movies CRUD API with Flask and SQLAlchmeny
+# E-commerce CRUD API with Flask and SQLAlchmeny
 
 ## How to run?
 
